@@ -1,0 +1,39 @@
+% Symmetrical (3-Phase) and LG Fault Analysis
+clc;
+clear;
+
+% Given Data
+Z1 = 1j*0.15;      % Positive sequence impedance (pu)
+Z2 = 1j*0.15;      % Negative sequence impedance (pu)
+Z0 = 1j*0.05;      % Zero sequence impedance (pu)
+
+Sbase = 100e6;     % 100 MVA
+Vbase = 132e3;     % 132 kV
+V = 1;             % Prefault voltage (pu)
+
+%% Part A: 3-Phase Fault
+If_3ph_pu = abs(V/Z1);
+
+Ibase = Sbase/(sqrt(3)*Vbase);   % Base current (A)
+If_3ph = If_3ph_pu * Ibase;      % Actual fault current (A)
+
+Fault_MVA = Sbase/1e6 * If_3ph_pu;
+
+%% Part B: Single Line-to-Ground (LG) Fault
+Zeq_LG = Z1 + Z2 + Z0;
+
+I1 = abs(V/Zeq_LG);     % Sequence current (pu)
+If_LG_pu = 3 * I1;      % LG fault current (pu)
+
+If_LG = If_LG_pu * Ibase;   % Actual fault current (A)
+
+%% Results
+fprintf('----- 3-Phase Fault -----\n');
+fprintf('Fault Current = %.4f pu\n', If_3ph_pu);
+fprintf('Fault Current = %.2f kA\n', If_3ph/1000);
+fprintf('Fault MVA     = %.2f MVA\n\n', Fault_MVA);
+
+fprintf('----- LG Fault -----\n');
+fprintf('Equivalent Impedance = j%.2f pu\n', imag(Zeq_LG));
+fprintf('Fault Current = %.4f pu\n', If_LG_pu);
+fprintf('Fault Current = %.2f kA\n', If_LG/1000);
