@@ -1,0 +1,24 @@
+clc; clear;
+
+Y12 = 1/(0.02+1i*0.06);
+Y13 = 1/(0.03+1i*0.09);
+Y24 = 1/(0.02+1i*0.04);
+Y34 = 1/(0.01+1i*0.03);
+
+Ybus = [Y12+Y13  -Y12      -Y13       0;
+        -Y12     Y12+Y24    0       -Y24;
+        -Y13       0      Y13+Y34   -Y34;
+          0      -Y24     -Y34    Y24+Y34];
+
+disp('Original Ybus = ')
+disp(Ybus)
+
+Y23 = 1/(0.05+1i*0.15);
+
+Ybus(2,2)=Ybus(2,2)+Y23;
+Ybus(3,3)=Ybus(3,3)+Y23;
+Ybus(2,3)=Ybus(2,3)-Y23;
+Ybus(3,2)=Ybus(3,2)-Y23;
+
+disp('Modified Ybus = ')
+disp(Ybus)
