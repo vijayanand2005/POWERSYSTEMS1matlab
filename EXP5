@@ -1,0 +1,44 @@
+% Economic Load Dispatch (Without Transmission Losses)
+clc;
+clear;
+
+PD = 350;   % Total Load (MW)
+
+% Incremental cost equations:
+% lambda = 0.02*P1 + 25
+% lambda = 0.03*P2 + 20
+% P1 + P2 = 350
+
+A = [0.02 -0.03;
+     1     1];
+
+B = [-5;
+     PD];
+
+X = A\B;
+
+P1 = X(1);
+P2 = X(2);
+
+lambda = 0.02*P1 + 25;
+
+fprintf('Optimal Dispatch Results\n');
+fprintf('P1 = %.2f MW\n', P1);
+fprintf('P2 = %.2f MW\n', P2);
+fprintf('Lambda = %.2f $/MWh\n', lambda);
+
+% Frequency response for 20 MW load increase
+DeltaPL = 20;   % MW
+f0 = 50;        % Hz
+
+t = 0:0.1:20;
+
+% Simple frequency recovery model using AGC/Tie-line Bias Control
+Deltaf = -0.2*exp(-t/5);
+
+figure;
+plot(t,f0+Deltaf,'LineWidth',2);
+grid on;
+xlabel('Time (s)');
+ylabel('Frequency (Hz)');
+title('Two-Area LFC: Frequency Recovery After 20 MW Load Increase');
