@@ -1,0 +1,35 @@
+clc; clear;
+
+% Given mismatches
+dP3 = 0.05;
+dQ3 = -0.02;
+
+% Example Jacobian Matrix (3x3)
+J = [10 -5  2;
+    -4 12  3;
+     1 -2  8];
+
+% Assume DeltaP2 = 0 for illustration
+Mismatch = [0; dP3; dQ3];
+
+% Solve for corrections
+X = J \ Mismatch;
+
+d_delta2 = X(1);
+d_delta3 = X(2);
+d_V3     = X(3);
+
+% Initial Bus-3 Voltage
+delta3_old = 0;      % rad
+V3_old = 1.0;        % pu
+
+% Updated Bus-3 Voltage
+delta3_new = delta3_old + d_delta3;
+V3_new = V3_old + d_V3;
+
+fprintf('Delta Delta2 = %.5f rad\n', d_delta2);
+fprintf('Delta Delta3 = %.5f rad\n', d_delta3);
+fprintf('Delta V3     = %.5f pu\n', d_V3);
+
+fprintf('\nUpdated Bus-3 Voltage:\n');
+fprintf('V3 = %.5f < %.5f rad\n', V3_new, delta3_new);
